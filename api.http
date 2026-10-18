@@ -1,0 +1,24 @@
+### Conserva las cookies y obtiene el token antes de modificar datos
+GET http://localhost:8080/api/csrf
+
+> {% client.global.set("csrf", response.body.token); %}
+
+### Catálogo original
+GET http://localhost:8080/api/products
+
+### Agregar al shopping_cart original
+POST http://localhost:8080/api/cart/items
+X-CSRF-TOKEN: {{csrf}}
+Content-Type: application/json
+
+{"productId":1,"quantity":2}
+
+### Consultar carrito
+GET http://localhost:8080/api/cart
+
+### Pago simulado; devuelve recibo sin persistir pedido
+POST http://localhost:8080/api/cart/checkout
+X-CSRF-TOKEN: {{csrf}}
+Content-Type: application/json
+
+{"method":"EFECTIVO"}
